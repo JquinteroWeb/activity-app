@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use, library_private_types_in_public_api
 
+import 'package:activity_app/screens/activities.screen.dart';
 import 'package:activity_app/screens/times_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,7 +13,7 @@ import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 class HomeScreen extends StatefulWidget {
   final Token token;
 
-  HomeScreen({required this.token});
+  const HomeScreen({super.key, required this.token});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -128,7 +128,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             leading: Icon(Icons.verified_sharp),
             title: const Text('Actividades'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ActivitiesScreen(
+                    token: widget.token,
+                  ),
+                ),
+              );
+            },
           ),
           //!Aqui debemos poner el llamado a la pantalla de Tareas
           ListTile(
