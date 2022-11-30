@@ -158,7 +158,7 @@ class _TimesScreenState extends State<TimesScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            title: Text('Filtrar Tiempos'),
+            title: const Text('Filtrar Tiempos'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

@@ -7,6 +7,8 @@ import 'package:activity_app/components/loader_component.dart';
 import 'package:activity_app/models/times.dart';
 import 'package:activity_app/helpers/api_helper.dart';
 
+import '../models/activities.dart';
+
 class TimeScreen extends StatefulWidget {
   final Token token;
   final Times times;
@@ -20,7 +22,7 @@ class TimeScreen extends StatefulWidget {
 
 class _TimeScreenState extends State<TimeScreen> {
   bool _showLoader = false;
-
+  List<Activities> _activities = [];
   String _observation = '';
   String _timework = '';
   String _date = '';
@@ -28,6 +30,9 @@ class _TimeScreenState extends State<TimeScreen> {
   String _timeId = '';
   String _observationError = '';
   bool _observationShowError = false;
+
+  String _activityError = '';
+  bool _activityShowError = false;
 
   String _timeworkError = '';
   bool _timeworkShowError = false;
@@ -40,11 +45,15 @@ class _TimeScreenState extends State<TimeScreen> {
   @override
   void initState() {
     super.initState();
+    _getActivities();
     _timeId = widget.times.timesId.toString();
     _observation = widget.times.observation;
     _timework = widget.times.timeWork.toString();
     _date = widget.times.date.toString();
-    _activitiesId = widget.times.activitiesId.toString();
+
+    _activitiesId = widget.times.activitiesId.toString() == '0'
+        ? ''
+        : widget.times.activitiesId.toString();
 
     _dateController.text = _date;
     _observationController.text = _observation;
@@ -66,7 +75,7 @@ class _TimeScreenState extends State<TimeScreen> {
             children: <Widget>[
               _showObservation(),
               _showTimeWork(),
-              _showActivityId(),
+              _showActivity(),
               _showDate(),
               _showButtons(),
             ],
@@ -120,20 +129,33 @@ class _TimeScreenState extends State<TimeScreen> {
     );
   }
 
-  Widget _showActivityId() {
+  Widget _showActivity() {
+    List<DropdownMenuItem<String>> items = [];
+
+    for (var i = 0; i < _activities.length; i++) {
+      items.add(
+        DropdownMenuItem(
+          value: _activities[i].activitiesId.toString(),
+          child: Text(_activities[i].description),
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(10),
-      child: TextField(
-        keyboardType: TextInputType.number,
-        controller: _activitiesIdController,
+      child: DropdownButtonFormField(
         decoration: InputDecoration(
-          hintText: 'Ingresa el id de la actividad',
-          labelText: 'Id de la actividad',
-          suffixIcon: const Icon(Icons.password),
+          errorText: _activityShowError ? _activityError : null,
+          labelText: 'Actividad',
+          // suffixIcon: const Icon(Icons.info),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
+        value: !(_activitiesId == '')
+            ? _activitiesId
+            : _activities[0].activitiesId.toString(),
+        items: items,
         onChanged: (value) {
-          _activitiesId = value;
+          _activitiesId = value.toString();
         },
       ),
     );
@@ -224,6 +246,12 @@ class _TimeScreenState extends State<TimeScreen> {
       _timeworkShowError = true;
       _timeworkError = 'Debes ingresar las horas.';
     }
+
+    // if (_activitiesId == 'No_Selected') {
+    //   isValid = false;
+    //   _activityShowError = true;
+    //   _activityError = 'Seleccione una actividad.';
+    // }
 
     setState(() {});
     return isValid;
@@ -387,5 +415,30 @@ class _TimeScreenState extends State<TimeScreen> {
           ]);
       return;
     }
+  }
+
+  Future<void> _getActivities() async {
+    setState(() {
+      _showLoader = true;
+    });
+    Response response = await ApiHelper.getActivities(widget.token);
+
+    setState(() {
+      _showLoader = false;
+    });
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            const AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    setState(() {
+      _activities = response.result;
+    });
   }
 }

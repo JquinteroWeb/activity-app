@@ -13,11 +13,11 @@ class LoaderComponent extends StatelessWidget {
       child: Container(
         width: 200,
         height: 100,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 59, 205, 250),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black),
-        ),
+        //decoration: BoxDecoration(
+        //color: Color.fromARGB(255, 242, 244, 245),
+        // borderRadius: BorderRadius.circular(10),
+        //border: Border.all(color: Colors.black),
+        //   ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

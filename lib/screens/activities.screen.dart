@@ -7,8 +7,6 @@ import 'package:activity_app/models/response.dart';
 import 'package:activity_app/components/loader_component.dart';
 import 'package:activity_app/models/activities.dart';
 import 'package:activity_app/helpers/api_helper.dart';
-import 'package:activity_app/screens/time_screen.dart';
-import 'package:intl/intl.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   final Token token;

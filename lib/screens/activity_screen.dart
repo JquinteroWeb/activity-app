@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +29,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
   String _descriptionError = '';
   bool _descriptionShowError = false;
 
-  String _statusError = '';
-  bool _statusShowError = false;
-
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _userIdController = TextEditingController();
@@ -64,7 +59,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: <Widget>[
               _showDescription(),
               _showStatus(),
-              _showUserId(),
               _showButtons(),
             ],
           ),
@@ -103,29 +97,18 @@ class _ActivityScreenState extends State<ActivityScreen> {
       const DropdownMenuItem(value: false, child: Text("Incompleto")),
     ];
 
-    return DropdownButton(
-      value: _status,
-      items: status,
-      onChanged: (value) {
-        _status = value!;
-      },
-    );
-  }
-
-  Widget _showUserId() {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: TextField(
-        keyboardType: TextInputType.number,
-        controller: _userIdController,
+      child: DropdownButtonFormField(
         decoration: InputDecoration(
-          enabled: false,
-          labelText: 'Id Usuario',
-          suffixIcon: const Icon(Icons.password),
+          labelText: 'Estado',
+          // suffixIcon: const Icon(Icons.info),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
+        value: _status,
+        items: status,
         onChanged: (value) {
-          _userId = value;
+          _status = value!;
         },
       ),
     );
